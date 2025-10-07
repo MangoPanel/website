@@ -1,4 +1,6 @@
-## Getting Started
+## developing
+
+### installing and running
 
 how to start working on the project:
 
@@ -10,5 +12,23 @@ how to start working on the project:
 
 4. open [http://localhost:3000](http://localhost:3000)
 
-> [!NOTE]
-> Do not commit to main, create a branch named your first name!
+### contributing
+
+Commit to your own branch.
+```bash
+git checkout -b first-name
+```
+or if the branch already exists
+```bash
+git checkout first-name
+```
+
+Once it's decided we're ready to merge, from main:
+```bash
+git merge first-name
+```
+
+After your repository was pushed, you're ready to update your branch to main
+```bash
+git pull origin main
+```
