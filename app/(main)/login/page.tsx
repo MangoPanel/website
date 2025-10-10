@@ -6,7 +6,7 @@ export default function Home() {
     return (
         <main>
             <div className="form-container">
-                <RegisterForm />
+                <LoginForm />
             </div>
         </main>
     );
@@ -17,19 +17,13 @@ function foo(formData: FormData) {
     redirect('/main');
 }
 
-function RegisterForm() {
+function LoginForm() {
+    const { pending } = useFormStatus();
     return (
         <form action={foo}>
             <input type="text" name="email" required />
             <input type="password" name="password" required />
-            <SubmitButton />
+            <button disabled={pending} type="submit">Sign in</button>
         </form>
-    );
-}
-
-function SubmitButton() {
-    const { pending } = useFormStatus();
-    return (
-        <button disabled={pending} type="submit">Sign in</button>
     );
 }

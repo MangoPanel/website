@@ -18,18 +18,12 @@ function foo(formData: FormData) {
 }
 
 function RegisterForm() {
+    const { pending } = useFormStatus();
     return (
         <form action={foo}>
             <input type="text" name="email" required />
             <input type="password" name="password" required />
-            <SubmitButton />
+            <button disabled={pending} type="submit">Sign up</button>
         </form>
-    );
-}
-
-function SubmitButton() {
-    const { pending } = useFormStatus();
-    return (
-        <button disabled={pending} type="submit">Sign up</button>
     );
 }
