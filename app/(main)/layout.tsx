@@ -1,4 +1,4 @@
-import "./landing.css";
+import "./main.css";
 import Link from 'next/link'
 
 export const metadata = {
