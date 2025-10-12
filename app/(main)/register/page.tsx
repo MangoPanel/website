@@ -21,8 +21,8 @@ function RegisterForm() {
     const { pending } = useFormStatus();
     return (
         <form action={foo}>
-            <input type="text" name="email" required />
-            <input type="password" name="password" required />
+            <input type="text" name="email" placeholder="email" required />
+            <input type="password" name="password" placeholder="password" required />
             <button disabled={pending} type="submit">Sign up</button>
         </form>
     );

@@ -8,7 +8,7 @@ export default function Home() {
                     {/* drag n drop functionality? no submit button it just gets sent to the list (if pdf) */}
                     {/* could make it so you can change the title here at this step? maybe */}
                     <label>
-                        Drop images here BLERGHAJHSGDJHA
+                        Drop images here yay<br />
                         <input type="file" multiple></input>
                     </label>
                 </div>
@@ -18,7 +18,7 @@ export default function Home() {
                 </div>
             </div>
             <div id="library-container">
-                {/* list of manga; shows first page, cover functionality perchance? more options on hover */}
+                {/* list of manga; shows first page, cover image functionality perchance? more options on hover */}
                 <Manga />
             </div>
         </main>
@@ -29,8 +29,10 @@ export default function Home() {
 function UploadedFile() {
     return (
         <div className="upload-file">
-            <p>TITLE...</p>
-            <button>STATE</button><br/>
+            <div className="upload-details">
+                <p>TITLE...</p>
+                <button>STATE</button><br/>
+            </div>
             <div className="progress-bar"></div>
         </div>
     );

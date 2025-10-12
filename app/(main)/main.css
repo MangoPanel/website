@@ -1,0 +1,91 @@
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@100;200;300;400;600;700;800;900&display=swap");
+
+* {
+  font-family: 'Geist', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-display: swap;
+  letter-spacing: 0.003em;
+  font-weight: 200;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    border-bottom: solid 1px var(--white);
+    margin-bottom: 2em;
+}
+header div {
+    font-size: 1.4rem;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding: 20px;
+}
+header .link {
+    text-decoration: none;
+}
+header .link:hover {
+    color: var(--purple);
+}
+
+main {
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+}
+
+/* LOGIN & REGISTER FORMS */
+
+div.form-container {
+    padding: 1em;
+    background-color: lightgray;
+}
+
+div.form-container > form {
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* MAIN PAGE */
+
+div#upload-container, div#library-container {
+    display: block;
+    background-color: lightgray;
+    width: 500px;
+    padding: 1em;
+}
+
+div#upload-container > div {
+    padding: 0.5em;
+    background-color: white;    
+    margin-bottom: 0.5em;
+}
+
+div.upload-file > .upload-details {
+    display: flex;
+    align-items: center;
+}
+
+div.upload-details > button {
+    height: fit-content;
+    width: 100px;
+    margin-left: auto;
+}
+
+div.upload-file > .progress-bar {
+    margin-top: 0.2em;
+    background-color: black;
+    height: 0.5em;
+    width: 100%;
+}
