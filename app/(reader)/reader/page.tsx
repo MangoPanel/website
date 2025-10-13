@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 type ConvertResponse = {
   images: string[];
   pageCount: number;
+  folder?: string;
 };
 
 
@@ -12,6 +13,7 @@ export default function Home() {
   const [idx, setIdx] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [folder, setFolder] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -40,10 +42,10 @@ export default function Home() {
   },[]);
 
   const prev = useCallback(() => {
-    setIdx(i => Math.max(0, i - 1));
+    setIdx(i => Math.max(0, i - 2));
   }, []);
   const next = useCallback(() => {
-    setIdx(i => (images ? Math.min(images.length - 1, i + 1) : i));
+    setIdx(i => (images ? Math.min(images.length - 2, i + 2) : i));
   }, [images]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -54,12 +56,35 @@ export default function Home() {
     return () => window.removeEventListener('keydown', onKey);
   }, [prev, next]);
 
+  useEffect(() => {
+  const handleCleanup = async () => {
+    if (folder) {
+      try {
+        await fetch(`/api/cleanup?folder=${encodeURIComponent(folder)}`, {
+          method: 'DELETE',
+        });
+      } catch (err) {
+        console.warn("Cleanup failed:", err);
+      }
+    }
+  };
+
+  window.addEventListener('beforeunload', handleCleanup);
+  window.addEventListener('unload', handleCleanup);
+
+  return () => {
+    handleCleanup();
+    window.removeEventListener('beforeunload', handleCleanup);
+    window.removeEventListener('unload', handleCleanup);
+  };
+}, [folder]);
+
   if (loading) {
     return (
       <main>
-        <a>loading</a>
+        <div className="loader"></div>
       </main>
-    );  
+    );
   }
   if (error || !images || images.length === 0) {
     return (
@@ -72,7 +97,8 @@ export default function Home() {
   return (
     <main>
       <div className='pages'>
-        <img src={images[idx]}/>
+        <div><img src={images[idx]}/></div>
+        <div><img src={images[idx+1]}/></div>
       </div>      
     </main>
   );
