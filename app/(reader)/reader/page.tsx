@@ -41,6 +41,15 @@ export default function Home() {
     return () => { cancelled = true; };
   },[]);
 
+  useEffect(() => {
+    if (!images) return;
+    const preload = [images[idx + 2], images[idx + 3]].filter(Boolean);
+    preload.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, [idx, images]);
+
   const prev = useCallback(() => {
     setIdx(i => Math.max(0, i - 2));
   }, []);
@@ -97,8 +106,8 @@ export default function Home() {
   return (
     <main>
       <div className='pages'>
-        <div><img src={images[idx]}/></div>
-        <div><img src={images[idx+1]}/></div>
+        <div><img src={images[idx]} loading="eager" /></div>
+        <div><img src={images[idx+1]} loading="eager" /></div>
       </div>      
     </main>
   );

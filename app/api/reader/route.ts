@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
         await fs.access(pdfPath).catch(() => { throw new Error('PDF not found at ${pdfPath}') });
         const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'pdf2jpg-'));
         const outPrefix = path.join(tmpDir, 'page');
-        await execFileAsync('pdftocairo', ['-jpeg', '-jpegopt', 'quality=70', '-r', '120', pdfPath, outPrefix]);
+        await execFileAsync('pdftocairo', ['-jpeg', '-jpegopt', 'quality=70', '-r', '90', pdfPath, outPrefix]);
         const files = await fs.readdir(tmpDir);
         const jpgs = files
             .filter((f) => f.toLocaleLowerCase().endsWith('.jpg'))
