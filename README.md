@@ -1,5 +1,11 @@
 ## developing
 
+### requirements
+
+- node.js
+- any manga of choice named test.pdf in /public
+- poppler (ensure bin is in path)
+
 ### installing and running
 
 how to start working on the project:

@@ -11,14 +11,15 @@ export const runtime = "nodejs";
 export async function POST(req: NextRequest) {
     try {
         const { url } = (await req.json()) as { url?: string };
-        if (!url || typeof url !== 'string') {
+        if (!url || typeof url !== 'string')
             return NextResponse.json({ error: 'could not find PDF file' }, { status: 400 });
-        }
+
         const pdfPath = path.join(process.cwd(), 'public', decodeURIComponent(url.replace(/^\//, '')));
         await fs.access(pdfPath).catch(() => { throw new Error('PDF not found at ${pdfPath}') });
         const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'pdf2jpg-'));
         const outPrefix = path.join(tmpDir, 'page');
-        await execFileAsync('pdftocairo', ['-jpeg', '-jpegopt', 'quality=70', '-r', '120', pdfPath, outPrefix]);
+        await execFileAsync('pdftocairo', ['-jpeg', '-jpegopt', 'quality=70', '-r', '90', pdfPath, outPrefix]);
+
         const files = await fs.readdir(tmpDir);
         const jpgs = files
             .filter((f) => f.toLocaleLowerCase().endsWith('.jpg'))
@@ -27,7 +28,8 @@ export async function POST(req: NextRequest) {
                 const nb = Number((b.match(/(\d+)\.jpg$/) || [,'0'])[1]);
                 return na - nb;
         });
-        if (jpgs.length === 0) { throw new Error('No images were produced by pdftocario'); }
+        if (jpgs.length === 0) 
+            throw new Error('No images were produced by pdftocario');
         const buffers = await Promise.all(jpgs.map((fname) => fs.readFile(path.join(tmpDir, fname))));
         const images = buffers.map( (buf) => `data:image/jpg;base64,${buf.toString('base64')}` );
         

@@ -20,16 +20,16 @@ export default function Home() {
     (async () => {
       try {
         setLoading(true);
-        const res = await fetch('/api/reader', {
+        const request = await fetch('/api/reader', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({url: '/test.pdf'}),
         });
-        if (!res.ok) {
-          const text = await res.text();
+        if (!request.ok) {
+          const text = await request.text();
           throw new Error(text || 'HTTP ${res.status}');
         }
-        const data: ConvertResponse = await res.json();
+        const data: ConvertResponse = await request.json();
         if (!cancelled) {
           setImages(data.images);
           setIdx(0);
@@ -40,6 +40,15 @@ export default function Home() {
     })();
     return () => { cancelled = true; };
   },[]);
+
+  useEffect(() => {
+    if (!images) return;
+    const preload = [images[idx + 2], images[idx + 3]].filter(Boolean);
+    preload.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, [idx, images]);
 
   const prev = useCallback(() => {
     setIdx(i => Math.max(0, i - 2));
@@ -89,7 +98,7 @@ export default function Home() {
   if (error || !images || images.length === 0) {
     return (
       <main>
-        <a>{error}</a>
+        <a>failed to process PDF file</a>
       </main>
     );
   }
@@ -97,8 +106,8 @@ export default function Home() {
   return (
     <main>
       <div className='pages'>
-        <div><img src={images[idx]}/></div>
-        <div><img src={images[idx+1]}/></div>
+        <div><img src={images[idx]} loading="eager" /></div>
+        <div><img src={images[idx+1]} loading="eager" /></div>
       </div>      
     </main>
   );
