@@ -1,3 +1,6 @@
+> [!NOTE]
+> This is an unfinished student project. As of current we don't accept new contributors.
+
 ## developing
 
 ### requirements
