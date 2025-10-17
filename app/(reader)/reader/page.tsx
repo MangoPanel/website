@@ -20,16 +20,16 @@ export default function Home() {
     (async () => {
       try {
         setLoading(true);
-        const res = await fetch('/api/reader', {
+        const request = await fetch('/api/reader', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({url: '/test.pdf'}),
         });
-        if (!res.ok) {
-          const text = await res.text();
+        if (!request.ok) {
+          const text = await request.text();
           throw new Error(text || 'HTTP ${res.status}');
         }
-        const data: ConvertResponse = await res.json();
+        const data: ConvertResponse = await request.json();
         if (!cancelled) {
           setImages(data.images);
           setIdx(0);
@@ -98,7 +98,7 @@ export default function Home() {
   if (error || !images || images.length === 0) {
     return (
       <main>
-        <a>{error}</a>
+        <a>failed to process PDF file</a>
       </main>
     );
   }

@@ -10,10 +10,13 @@
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.3.1",
+    "@types/bcrypt": "^6.0.0",
+    "bcrypt": "^6.0.0",
     "geist": "^1.5.1",
     "next": "15.5.4",
     "pdf-poppler": "^0.2.3",
     "pdfjs-dist": "^5.4.296",
+    "pg": "^8.16.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-pdf": "^10.2.0"
@@ -21,6 +24,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
+    "@types/pg": "^8.15.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

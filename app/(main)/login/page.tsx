@@ -1,29 +1,41 @@
 'use client'
-import { useFormStatus } from "react-dom";
-import { redirect } from 'next/navigation';
+import { useState } from 'react'
+import { useFormStatus } from 'react-dom'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
+    const [error, setError] = useState('')
+    const { pending } = useFormStatus()
+    const router = useRouter()
+
+    async function Login(form: React.FormEvent<HTMLFormElement>) {
+        form.preventDefault();
+        setError('');
+
+        const data = new FormData(form.currentTarget);
+        const request = await fetch('/api/login', {
+            method: 'POST',
+            body: data,
+        });
+        if (request.redirected) 
+            router.push('/main');
+        else {
+            const json = await request.json();
+            setError(json.error || 'unknown error')
+        }
+    }
+
     return (
         <main>
             <div className="form-container">
-                <LoginForm />
+                <form onSubmit={Login}>
+                    <input type="text" name="email" placeholder="email" required />
+                    <input type="password" name="password" placeholder="password" required />
+                    <button disabled={pending} type="submit">Sign in</button>
+
+                    {error && <p>{error}</p>}
+                </form>
             </div>
         </main>
-    );
-}
-
-// form action
-function foo(formData: FormData) {
-    redirect('/main');
-}
-
-function LoginForm() {
-    const { pending } = useFormStatus();
-    return (
-        <form action={foo}>
-            <input type="text" name="email" placeholder="email" required />
-            <input type="password" name="password" placeholder="password" required />
-            <button disabled={pending} type="submit">Sign in</button>
-        </form>
     );
 }
