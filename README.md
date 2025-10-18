@@ -32,12 +32,9 @@ or if the branch already exists
 git checkout first-name
 ```
 
-Once it's decided we're ready to merge, from main:
-```bash
-git merge first-name
-```
+As of current, we pull request directly to main
 
-After your repository was pushed, you're ready to update your branch to main
+After your repository was merged, remember to update your branch with
 ```bash
 git pull origin main
 ```
