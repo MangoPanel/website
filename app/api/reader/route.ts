@@ -15,10 +15,10 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'could not find PDF file' }, { status: 400 });
 
         const pdfPath = path.join(process.cwd(), 'public', decodeURIComponent(url.replace(/^\//, '')));
-        await fs.access(pdfPath).catch(() => { throw new Error('PDF not found at ${pdfPath}') });
+        await fs.access(pdfPath).catch(() => { throw new Error('PDF convertion failed') });
         const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'pdf2jpg-'));
         const outPrefix = path.join(tmpDir, 'page');
-        await execFileAsync('pdftocairo', ['-jpeg', '-jpegopt', 'quality=70', '-r', '90', pdfPath, outPrefix]);
+        await execFileAsync('pdftocairo', ['-jpeg', '-jpegopt', 'quality=70', '-r', '80', pdfPath, outPrefix]);
 
         const files = await fs.readdir(tmpDir);
         const jpgs = files
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
                 return na - nb;
         });
         if (jpgs.length === 0) 
-            throw new Error('No images were produced by pdftocario');
+            throw new Error('PDF convertion failed');
         const buffers = await Promise.all(jpgs.map((fname) => fs.readFile(path.join(tmpDir, fname))));
         const images = buffers.map( (buf) => `data:image/jpg;base64,${buf.toString('base64')}` );
         

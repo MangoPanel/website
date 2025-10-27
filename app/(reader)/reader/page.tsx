@@ -7,7 +7,6 @@ type ConvertResponse = {
   folder?: string;
 };
 
-
 export default function Home() {
   const [images, setImages] = useState<string[] | null>(null);
   const [idx, setIdx] = useState(0);
