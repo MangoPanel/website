@@ -14,6 +14,7 @@
     "bcrypt": "^6.0.0",
     "geist": "^1.5.1",
     "next": "15.5.4",
+    "pdf-lib": "^1.17.1",
     "pdf-poppler": "^0.2.3",
     "pdfjs-dist": "^5.4.296",
     "pg": "^8.16.3",
@@ -23,7 +24,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@types/node": "^20",
+    "@types/node": "^20.19.23",
     "@types/pg": "^8.15.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
