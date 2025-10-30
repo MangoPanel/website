@@ -37,7 +37,7 @@ header .link:hover {
 main {
     width: 100vw;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 1em;
@@ -59,33 +59,72 @@ div.form-container > form {
 
 /* MAIN PAGE */
 
-div#upload-container, div#library-container {
-    display: block;
+div#upload-input {
     background-color: lightgray;
     width: 500px;
     padding: 1em;
+    text-align: center;
 }
 
-div#upload-container > div {
-    padding: 0.5em;
-    background-color: white;    
-    margin-bottom: 0.5em;
-}
-
-div.upload-file > .upload-details {
+div#main-content {
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    gap: 1em;
+}
+
+div#main-content > div {
+    background-color: lightgray;
+    padding: 1em;
+}
+
+/* UPLOAD LIST */
+
+div#upload-list {
+    width: 240px;
+}
+
+div.upload-file {
+    border: 1px solid black;
+    padding: 1em;
+    margin-bottom: 1em;
+}
+
+div.upload-details > div.input-wrapper {
+    display: flex;
+    border: 1px solid black;
+    background: white;
+    padding: 3px;
+    margin: 10px 0;
+}
+
+div.input-wrapper > input {
+    position: relative;
+    background: transparent;
+    border: none;
+    padding: 0;
+    width: 160px;
+}
+
+div.input-wrapper > div.input-suffix {
+    position: relative;
 }
 
 div.upload-details > button {
     height: fit-content;
-    width: 100px;
     margin-left: auto;
 }
 
-div.upload-file > .progress-bar {
+div.progress-bar {
     margin-top: 0.2em;
     background-color: black;
     height: 0.5em;
     width: 100%;
+}
+
+div.progress-bar.loading {
+    background-color: yellow;
+}
+
+div#library-container {
+    width: 600px;
 }
