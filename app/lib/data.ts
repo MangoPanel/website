@@ -10,11 +10,11 @@ export const pg =
   globalForPg.pgPool ??
   new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: process.env.NODE_ENV === 'production' ? { 
-      rejectUnauthorized: false 
-    } : false,
-    connectionTimeoutMillis: 10000,
-    idleTimeoutMillis: 30000,
+    ssl: sslConfig,
+    connectionTimeoutMillis: 5000,
+    idleTimeoutMillis: 60000,
+    max: 30,
+    min: 5,
   });
 
 if (!globalForPg.pgPool) globalForPg.pgPool = pg;

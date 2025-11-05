@@ -26,12 +26,10 @@ export async function POST(request: NextRequest) {
     const url = new URL('/login', request.url);
     return NextResponse.redirect(url, { status: 302 });
   } 
-  catch (err: any) {
-
-    if (err?.code === '23505')
-      return NextResponse.json({ error: 'This email is already registered.' }, { status: 409 });
-
-    console.error('Register error:', err);
+  catch (err : unknown) {
+    if (err && typeof err === 'object' && 'code' in err && err.code === '23505') {
+      return NextResponse.json({ error: 'Email already in use. Please use a different email.' }, { status: 400 });
+    }
     return NextResponse.json({ error: 'Server error. Please try again.' }, { status: 500 });
   }
 }
