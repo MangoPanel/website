@@ -23,8 +23,7 @@ export async function POST(request: NextRequest) {
       [rawEmail, hash],
     );
 
-    const url = new URL('/login', request.url);
-    return NextResponse.redirect(url, { status: 302 });
+    return NextResponse.redirect(new URL('/login', request.url), { status: 302 });
   } 
   catch (err : unknown) {
     if (err && typeof err === 'object' && 'code' in err && err.code === '23505') {

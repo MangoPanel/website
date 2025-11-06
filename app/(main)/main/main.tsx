@@ -1,5 +1,6 @@
 "use client"
-import { PDF } from "@/app/lib/pdf"
+import { PDF } from "@/app/lib/pdf";
+import { useRouter } from 'next/navigation';
 import { useEffect, ChangeEvent, useState } from "react";
 
 export function Main({ email }: { email: string }) {
@@ -133,15 +134,47 @@ function UploadedFile({ file, email, onRemove }: UploadedFileProps) {
 }
 
 function MangaCard({ PDF }: { PDF: PDF }) {
+    const router = useRouter();
+    const redirect = function() {
+        router.push(`/reader/${PDF.id}`)
+    }
+    const deletePDF = function() {
+        const form = new FormData();
+        form.append("email", PDF.email);
+        form.append("id", String(PDF.id));
+        fetch('/api/pdf/delete', {
+            method: 'POST',
+            body: form,
+        });
+    }
+    const download = function() {
+        const link = document.createElement('a');
+        link.href = String(PDF.link);
+        link.download = PDF.name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+    const redo = function() {
+        // TODO
+    }
+    if (!PDF.processed) {
+        return (
+            <div className="library-element">
+                <p>{PDF.name}</p>
+                {/* add loading animation */}
+            </div>
+        );
+    }
     return (
         <div className="library-element">
             <p>{PDF.name}</p>
             <div className="manga-options">
-                <button>DOWNLOAD</button>
-                {PDF.processed && <button>REDO</button>}
-                <button>READ</button>
-                <button>RENAME</button>
-                <button>DELETE</button>
+                <button onClick={download}>DOWNLOAD</button>
+                <button onClick={redo}>REDO</button>
+                <button onClick={redirect}>READ</button>
+                <button>RENAME</button> {/* Julia pozostawiam to tobie */}
+                <button onClick={deletePDF}>DELETE</button>
             </div>
         </div>
     );

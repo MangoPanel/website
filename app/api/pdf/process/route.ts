@@ -35,7 +35,10 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(arrayBuffer); 
     const pageLen = pdfLength(arrayBuffer);
     
-    const folderPath = path.join(process.cwd(), 'public', 'pdf', email);
+    const pdfPath = path.join(process.cwd(), 'public', 'pdf');
+    if (!fs.existsSync(pdfPath))
+      fs.mkdirSync(pdfPath, { recursive: true });
+    const folderPath = path.join(pdfPath, email);
     if (!fs.existsSync(folderPath))
       fs.mkdirSync(folderPath, { recursive: true });
     const fileName = `${id}.pdf`;
