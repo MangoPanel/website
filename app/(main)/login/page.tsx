@@ -1,41 +1,14 @@
-'use client'
-import { useState } from 'react'
-import { useFormStatus } from 'react-dom'
-import { useRouter } from 'next/navigation'
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import { Main } from "./main"
 
-export default function Home() {
-    const [error, setError] = useState('')
-    const { pending } = useFormStatus()
-    const router = useRouter()
-
-    async function Login(form: React.FormEvent<HTMLFormElement>) {
-        form.preventDefault();
-        setError('');
-
-        const data = new FormData(form.currentTarget);
-        const request = await fetch('/api/login', {
-            method: 'POST',
-            body: data,
-        });
-        if (request.redirected) 
-            router.push('/main');
-        else {
-            const json = await request.json();
-            setError(json.error || 'unknown error')
-        }
-    }
+export default async function Home() {
+    const cookieStore = await cookies();
+    const email = cookieStore.get("email")?.value;
+    if (email)
+        redirect("/main");
 
     return (
-        <main>
-            <div className="form-container">
-                <form onSubmit={Login}>
-                    <input type="text" name="email" placeholder="email" required />
-                    <input type="password" name="password" placeholder="password" required />
-                    <button disabled={pending} type="submit">Sign in</button>
-
-                    {error && <p>{error}</p>}
-                </form>
-            </div>
-        </main>
+        <Main/>
     );
 }
