@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default async function Home({ params } : Props) {
-  let resolvedParams = await params;
+  const resolvedParams = await params;
   const cookieStore = await cookies();
   const email  = cookieStore.get("email")?.value;
   if (!email)

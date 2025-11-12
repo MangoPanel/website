@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     if (!fs.existsSync(imagesFolderPath))
       fs.mkdirSync(imagesFolderPath, { recursive: true });
 
-    execFile('pdftocairo', ['-jpeg', '-jpegopt', 'quality=80', '-r', '144', filePath, path.join(imagesFolderPath, 'page')]);
+    execFile('pdftocairo', ['-jpeg', '-jpegopt', 'quality=80', '-r', '72', filePath, path.join(imagesFolderPath, 'page')]);
 
     await pdfUpdate(publicLink, name, email, await pageLen, false, true, translated);
 
