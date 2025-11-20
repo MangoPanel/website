@@ -1,11 +1,10 @@
 import { pg } from '@/app/lib/data';
-import { PathOrFileDescriptor } from "fs";
 
 export type PDF = {
     id: number;
     name: string;
     email: string;
-    link: PathOrFileDescriptor;
+    r2_key: string;
     favourite: boolean;
     processed: boolean;
     translated: boolean;
@@ -20,10 +19,10 @@ export async function pdfInsert(name: string, email: string, translated: boolean
     return result.rows[0].id;
 }
 
-export async function pdfUpdate(link : string, name : string, email : string, pageCount : number, favourite : boolean, processed : boolean, translated : boolean) {
+export async function pdfUpdate(name : string, r2_key : string, email : string, pageCount : number, favourite : boolean, processed : boolean, translated : boolean) {
     await pg.query(
-        'UPDATE pdf SET link=$2, email=$3, page_count=$4, favourite=$5, processed=$6, translated=$7 WHERE name=$1',
-        [name, link, email, pageCount, favourite, processed, translated]
+        'UPDATE pdf SET r2_key=$2, email=$3, page_count=$4, favourite=$5, processed=$6, translated=$7 WHERE name=$1',
+        [name, r2_key, email, pageCount, favourite, processed, translated]
     );
 }
 
@@ -37,7 +36,7 @@ export async function pdfGet(name : string, email : string): Promise<PDF> {
         id: data.id,
         name: data.name,
         email: data.email,
-        link: data.link,
+        r2_key: data.r2_key,
         favourite: data.favourite,
         processed: data.processed,
         page_count: data.page_count,
@@ -56,7 +55,7 @@ export async function pdfGetAll(email : string): Promise<PDF[]> {
             id: row.id,
             name: row.name,
             email: row.email,
-            link: row.link,
+            r2_key: row.r2_key,
             favourite: row.favourite,
             processed: row.processed,
             page_count: row.page_count,

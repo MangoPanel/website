@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PDFDocument } from 'pdf-lib';
-import { execFile } from 'child_process';
 import { pdfInsert, pdfUpdate } from '@/app/lib/pdf';
-import path from 'path';
-import fs from 'fs';
+import { writeR2 } from '@/app/lib/r2';
 
 export const runtime = 'nodejs';
 
@@ -29,30 +27,15 @@ export async function POST(request: NextRequest) {
     if (typeof name !== "string" || typeof email !== "string")
         return NextResponse.json({ error: "Failed to retrieve file name or user email" }, { status: 400 });
 
-    const id = await pdfInsert(name, email, translated);
+    const id : number = await pdfInsert(name, email, translated);
 
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer); 
     const pageLen = pdfLength(arrayBuffer);
     
-    const pdfPath = path.join(process.cwd(), 'public', 'pdf');
-    if (!fs.existsSync(pdfPath))
-      fs.mkdirSync(pdfPath, { recursive: true });
-    const folderPath = path.join(pdfPath, email);
-    if (!fs.existsSync(folderPath))
-      fs.mkdirSync(folderPath, { recursive: true });
-    const fileName = `${id}.pdf`;
-    const filePath = path.join(folderPath, fileName);
-    fs.writeFileSync(filePath, buffer);
-    const publicLink = `/pdf/${email}/${fileName}`;
+    const key = await writeR2(buffer, String(id), email, "application/pdf");
 
-    const imagesFolderPath = path.join(folderPath, id.toString());
-    if (!fs.existsSync(imagesFolderPath))
-      fs.mkdirSync(imagesFolderPath, { recursive: true });
-
-    execFile('pdftocairo', ['-jpeg', '-jpegopt', 'quality=80', '-r', '72', filePath, path.join(imagesFolderPath, 'page')]);
-
-    await pdfUpdate(publicLink, name, email, await pageLen, false, true, translated);
+    await pdfUpdate(name, key, email, await pageLen, false, true, translated);
 
     return NextResponse.json({ status: 200 });
   } catch {

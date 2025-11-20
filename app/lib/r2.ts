@@ -1,5 +1,8 @@
-import { S3Client, PutObjectCommand, DeleteObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
-import { v4 as uuidv4 } from 'uuid';
+import { S3Client, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { NodeHttpHandler } from "@aws-sdk/node-http-handler";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { Upload } from "@aws-sdk/lib-storage";
+import https from "https";
 
 const R2 = new S3Client({
   region: 'auto',
@@ -8,22 +11,23 @@ const R2 = new S3Client({
     accessKeyId: process.env.R2_ACCESS_KEY_ID!,
     secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
   },
+  requestHandler: new NodeHttpHandler({
+    httpsAgent: new https.Agent({
+      keepAlive: true,
+      maxSockets: 50,
+    }),
+    connectionTimeout: 30_000,
+    socketTimeout: 300_000,
+  }),
+  maxAttempts: 3,
 });
 
-interface UploadFileParams {
-  file: Buffer | Uint8Array | Blob | string;
-  fileName: string;
-  folder: string;
-  bucketName: string;
-  contentType?: string;
-}
-
-export async function writeR2({
-  file,
-  fileName,
-  folder,
-  contentType, // image/jpeg or application/pdf
-}: UploadFileParams): Promise<{ key: string; url: string }> {
+export async function writeR2(
+  file : Buffer | Uint8Array | Blob | string,
+  fileName : string,
+  folder : string,
+  contentType : string,
+) {
   try {
     const sanitizedFolder = folder.replace(/^\/+|\/+$/g, '');
     const sanitizedFileName = fileName.replace(/^\/+/g, '');
@@ -37,17 +41,20 @@ export async function writeR2({
     else
       fileBuffer = file as Buffer;
 
-    const command = new PutObjectCommand({
-      Bucket: process.env.R2_BUCKET_NAME,
-      Key: key,
-      Body: fileBuffer,
-      ContentType: contentType,
+    const uploader = new Upload({
+      client: R2,
+      params: {
+        Bucket: process.env.R2_BUCKET_NAME!,
+        Key: key,
+        Body: fileBuffer,
+        ContentType: contentType,
+      },
+      partSize: 5 * 1024 * 1024, // 5 MB
+      leavePartsOnError: false,
     });
-    await R2.send(command);
+    await uploader.done();
 
-    const url = `https://pub-${process.env.R2_ACCOUNT_ID}.r2.dev/${key}`;
-
-    return { key, url };
+    return key;
   } catch (error) {
     console.error('Error uploading file to R2:', error);
     throw new Error(`Failed to upload file: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -67,4 +74,13 @@ export async function deleteR2(key: string): Promise<{ success: boolean }> {
     console.error('Error deleting file from R2:', error);
     throw new Error(`Failed to delete file: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
+}
+
+export async function urlR2(key: string, expiresIn: number = 3600): Promise<string> {
+  const command = new GetObjectCommand({
+    Bucket: process.env.R2_BUCKET_NAME,
+    Key: key,
+  });
+
+  return await getSignedUrl(R2, command, { expiresIn });
 }

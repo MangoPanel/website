@@ -7,14 +7,14 @@ const sslConfig = process.env.NODE_ENV === 'production' ? {
 } : false;
 
 export const pg =
-  globalForPg.pgPool ??
-  new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: sslConfig,
-    connectionTimeoutMillis: 5000,
-    idleTimeoutMillis: 60000,
-    max: 30,
-    min: 5,
-  });
+globalForPg.pgPool ??
+new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: sslConfig,
+  connectionTimeoutMillis: 10000,
+  idleTimeoutMillis: 30000,
+  max: 20,
+  min: 2,
+});
 
 if (!globalForPg.pgPool) globalForPg.pgPool = pg;
