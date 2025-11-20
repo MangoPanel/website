@@ -1,5 +1,6 @@
 "use client"
 import { PDF } from "@/app/lib/pdf";
+import { urlR2wrapper, pdfGetAllWrapper } from "@/app/actions/wrapper";
 import { useRouter } from 'next/navigation';
 import { useEffect, ChangeEvent, useState } from "react";
 
@@ -21,21 +22,9 @@ export function Main({ email }: { email: string }) {
 
     useEffect(() => {
         const fetchPDFs = async () => {
-            const request = await fetch("/api/pdf/getAll", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email }), 
-            });
-            if (!request.ok) {
-                return;
-            }
-            const data = await request.json();
-            const pdfArr : PDF[] = data.pdfArr || [];
+            const pdfArr : PDF[] = await pdfGetAllWrapper(email) || [];
             const processed   = pdfArr.filter(pdf => pdf.processed === true);
             const unprocessed = pdfArr.filter(pdf => pdf.processed === false);
-
             setPDF(processed);
             setUnprocessedPDF(unprocessed);
         };
@@ -136,24 +125,31 @@ function UploadedFile({ file, email, onRemove }: UploadedFileProps) {
 function MangaCard({ PDF }: { PDF: PDF }) {
     const router = useRouter();
     const redirect = function() {
-        router.push(`/reader/${PDF.id}`)
+        router.push(`/reader/${PDF.email}/${PDF.id}`)
     }
     const deletePDF = function() {
         const form = new FormData();
         form.append("email", PDF.email);
+        form.append("r2_key", PDF.r2_key);
         form.append("id", String(PDF.id));
         fetch('/api/pdf/delete', {
             method: 'POST',
             body: form,
         });
     }
-    const download = function() {
-        const link = document.createElement('a');
-        link.href = String(PDF.link);
-        link.download = PDF.name;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    const download = async function() {
+        const response = await urlR2wrapper(PDF.r2_key);
+        if (response.success && typeof response.url === "string") {
+            const link = document.createElement('a');
+            link.href = response.url;
+            link.download = PDF.name.endsWith('.pdf') ? PDF.name : `${PDF.name}.pdf`;
+            link.target = '_blank';
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+            // show error notification
     }
     const redo = function() {
         // TODO

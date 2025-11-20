@@ -1,61 +1,114 @@
-"use client"
-import { useEffect, useState, useCallback  } from "react";
+"use client";
+import { useState, useEffect, useMemo } from "react";
+import { Document, Page, pdfjs } from "react-pdf";
+import 'react-pdf/dist/Page/TextLayer.css';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
 
-function pageLink(folder : string, page : number) {
-  return `${folder}/page-${page.toString().padStart(3, '0')}.jpg`;
+if (typeof window !== "undefined")
+  if (!pdfjs.GlobalWorkerOptions.workerSrc)
+    pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+
+interface MainProps {
+  url: string;
 }
 
-async function checkPageExists(folder: string, page: number): Promise<boolean> {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => resolve(true);
-    img.onerror = () => resolve(false);
-    img.src = pageLink(folder, page);
-  });
-}
+export function Main({ url }: MainProps) {
+  const [numPages, setNumPages] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const file = useMemo(() => ({ url }), [url]);
+  const options = useMemo(
+    () => ({
+      disableRange: true,
+      disableStream: true,
+    }),
+    []
+  );
 
-export function Main({ folder }: { folder: string }) {
-  const [page, setPage] = useState(1);
-  const [lastPage, setLastPage] = useState<number | null>(null);
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
+    setNumPages(numPages);
+  }
+
+  const goToPreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 2, 1));
+  };
+
+  const goToNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 2, numPages - 1));
+  };
 
   useEffect(() => {
-    const discoverLastPage = async () => {
-      if (lastPage !== null) return;
-      
-      let testPage = 1;
-      while (await checkPageExists(folder, testPage))
-        testPage++;
-      setLastPage(testPage - 1);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft")
+        setCurrentPage((prev) => Math.max(prev - 2, 1));
+      else if (e.key === "ArrowRight")
+        setCurrentPage((prev) => Math.min(prev + 2, numPages - 1));
     };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [numPages]);
+
+  const getVisiblePages = () => {
+    const pages = [];
     
-    discoverLastPage();
-  }, [folder, lastPage]);
-
-  const handleKeyPress = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'ArrowLeft') {
-      setPage(prev => Math.max(1, prev - 2));
-    } else if (e.key === 'ArrowRight') {
-      setPage(prev => prev + 2);
+    if (currentPage <= numPages) {
+      pages.push(currentPage);
     }
-  }, []);
-
-  useEffect(() => {
-    if (lastPage && page > lastPage) {
-      setPage(prev => Math.max(1, prev - 2));
+    
+    if (currentPage + 1 <= numPages) {
+      pages.push(currentPage + 1);
     }
-  }, [page, lastPage]);
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [handleKeyPress]);
+    
+    return pages;
+  };
 
   return (
-      <main>
-      <div className='pages'>
-          <div><img src={pageLink(folder, page)} loading="eager" alt={`page ${page}`} /></div>
-          <div><img src={pageLink(folder, page + 1)} loading="eager" alt={`page ${page + 1}`} /></div>
-      </div>      
-      </main>
+    <main>
+      <div className="viewer-container">
+        <div className="pdf-viewer">
+          <Document
+            file={file}
+            options={options}
+            onLoadSuccess={onDocumentLoadSuccess}
+            loading={<div className="loading"></div>}
+            error={<div className="error">Failed to load PDF</div>}
+          >
+            <div className="pages">
+              {getVisiblePages().map((pageNumber) => (
+                <div key={pageNumber} className="page-container">
+                  <Page
+                    pageNumber={pageNumber}
+                    renderTextLayer={false}
+                    renderAnnotationLayer={false}
+                    loading={<div className="page-loading">Loading page {pageNumber}...</div>}
+                  />
+                </div>
+              ))}
+            </div>
+          </Document>
+        </div>
+        <div className="controls">
+          <button 
+            onClick={goToPreviousPage} 
+            disabled={currentPage <= 1}
+            className="control-btn"
+          >
+            ← Previous
+          </button>
+          
+          <span className="page-info">
+            {currentPage}-{Math.min(currentPage + 1, numPages)} of {numPages}
+          </span>
+          
+          <button 
+            onClick={goToNextPage} 
+            disabled={currentPage >= numPages - 1}
+            className="control-btn"
+          >
+            Next →
+          </button>
+        </div>
+      </div>
+    </main>
   );
 }
