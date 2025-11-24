@@ -2,9 +2,9 @@
 import { pdfGetAll } from '@/app/lib/pdf';
 import { urlR2 } from '@/app/lib/r2';
 
-export async function urlR2wrapper(r2_key: string) {
+export async function urlR2wrapper(r2_key: string, expiresIn: number) {
   try {
-    const url : string = await urlR2(r2_key);
+    const url : string = await urlR2(r2_key, expiresIn);
     return { success: true, url };
   } catch (error) {
     console.error('Download error:', error);
