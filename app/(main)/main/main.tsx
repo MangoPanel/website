@@ -138,7 +138,7 @@ function MangaCard({ PDF }: { PDF: PDF }) {
         });
     }
     const download = async function() {
-        const response = await urlR2wrapper(PDF.r2_key);
+        const response = await urlR2wrapper(PDF.r2_key, 60);
         if (response.success && typeof response.url === "string") {
             const link = document.createElement('a');
             link.href = response.url;

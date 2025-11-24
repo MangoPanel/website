@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -9,12 +9,18 @@ if (typeof window !== "undefined")
     pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
 interface MainProps {
-  url: string;
+  url : string;
 }
 
 export function Main({ url }: MainProps) {
-  const [numPages, setNumPages] = useState<number>(0);
-  const [currentPage, setCurrentPage] = useState(1);
+  const mobileWidth = 900;
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < mobileWidth);
+  useEffect(() => {
+    const handleResize = () => { setIsMobile(window.innerWidth < mobileWidth); }
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
   const file = useMemo(() => ({ url }), [url]);
   const options = useMemo(
     () => ({
@@ -24,41 +30,35 @@ export function Main({ url }: MainProps) {
     []
   );
 
-  function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
-    setNumPages(numPages);
-  }
+  const [numPages, setNumPages] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }) { setNumPages(numPages); }
+  const pages = isMobile ? 1 : 2;
 
-  const goToPreviousPage = () => {
-    setCurrentPage((prev) => Math.max(prev - 2, 1));
-  };
-
-  const goToNextPage = () => {
-    setCurrentPage((prev) => Math.min(prev + 2, numPages - 1));
-  };
+  const goToPreviousPage = useCallback(() => {
+    setCurrentPage(prev => Math.max(prev - pages, 1));
+  }, [pages]);
+  const goToNextPage = useCallback(() => {
+    setCurrentPage(prev => Math.min(prev + pages, numPages - (pages === 2 ? 1 : 0)));
+  }, [pages, numPages]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft")
-        setCurrentPage((prev) => Math.max(prev - 2, 1));
-      else if (e.key === "ArrowRight")
-        setCurrentPage((prev) => Math.min(prev + 2, numPages - 1));
+      if (e.key === "ArrowLeft") goToPreviousPage();
+      else if (e.key === "ArrowRight") goToNextPage();
     };
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [numPages]);
+  }, [goToNextPage, goToPreviousPage]);
 
   const getVisiblePages = () => {
     const pages = [];
-    
     if (currentPage <= numPages) {
       pages.push(currentPage);
     }
-    
-    if (currentPage + 1 <= numPages) {
+    if (!isMobile && currentPage + 1 <= numPages) {
       pages.push(currentPage + 1);
     }
-    
     return pages;
   };
 
@@ -80,7 +80,6 @@ export function Main({ url }: MainProps) {
                     pageNumber={pageNumber}
                     renderTextLayer={false}
                     renderAnnotationLayer={false}
-                    loading={<div className="page-loading">Loading page {pageNumber}...</div>}
                   />
                 </div>
               ))}
@@ -102,7 +101,7 @@ export function Main({ url }: MainProps) {
           
           <button 
             onClick={goToNextPage} 
-            disabled={currentPage >= numPages - 1}
+            disabled={currentPage >= numPages - (pages === 2 ? 1 : 0)}
             className="control-btn"
           >
             Next →

@@ -76,7 +76,7 @@ export async function deleteR2(key: string): Promise<{ success: boolean }> {
   }
 }
 
-export async function urlR2(key: string, expiresIn: number = 3600): Promise<string> {
+export async function urlR2(key: string, expiresIn: number): Promise<string> {
   const command = new GetObjectCommand({
     Bucket: process.env.R2_BUCKET_NAME,
     Key: key,
