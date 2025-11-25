@@ -24,8 +24,8 @@ export function Main({ url }: MainProps) {
   const file = useMemo(() => ({ url }), [url]);
   const options = useMemo(
     () => ({
-      disableRange: true,
-      disableStream: true,
+      disableRange: false,
+      disableStream: false,
     }),
     []
   );
@@ -52,14 +52,11 @@ export function Main({ url }: MainProps) {
   }, [goToNextPage, goToPreviousPage]);
 
   const getVisiblePages = () => {
-    const pages = [];
-    if (currentPage <= numPages) {
-      pages.push(currentPage);
-    }
-    if (!isMobile && currentPage + 1 <= numPages) {
-      pages.push(currentPage + 1);
-    }
-    return pages;
+    const pageArr = [];
+    pageArr.push(currentPage);
+    if (!isMobile && currentPage + 1 <= numPages)
+      pageArr.push(currentPage + 1);
+    return pageArr;
   };
 
   return (
@@ -77,9 +74,11 @@ export function Main({ url }: MainProps) {
               {getVisiblePages().map((pageNumber) => (
                 <div key={pageNumber} className="page-container">
                   <Page
+                    scale={1.2}
                     pageNumber={pageNumber}
                     renderTextLayer={false}
                     renderAnnotationLayer={false}
+                    loading={<div className="loading"></div>}
                   />
                 </div>
               ))}

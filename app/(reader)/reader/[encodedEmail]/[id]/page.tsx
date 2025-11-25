@@ -10,7 +10,7 @@ interface PageProps {
 export default async function Home({ params }: PageProps) {
   const { encodedEmail, id } = await params;
   const email = decodeURIComponent(encodedEmail);
-  const url = await urlR2(`${email}/${id}`, 3600);
+  const url = await urlR2(`${email}/${id}`, 14400);
   const cookieStore = await cookies();
   const cookieEmail  = cookieStore.get("email")?.value;
   if (cookieEmail !== email)
