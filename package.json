@@ -13,19 +13,15 @@
     "@aws-sdk/lib-storage": "^3.934.0",
     "@aws-sdk/node-http-handler": "^3.370.0",
     "@aws-sdk/s3-request-presigner": "^3.934.0",
-    "@react-pdf/renderer": "^4.3.1",
     "@types/bcrypt": "^6.0.0",
     "bcrypt": "^6.0.0",
-    "geist": "^1.5.1",
     "next": "15.5.4",
     "pdf-lib": "^1.17.1",
-    "pdf-poppler": "^0.2.3",
     "pdfjs-dist": "^5.4.296",
     "pg": "^8.16.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-pdf": "^10.2.0",
-    "uuid": "^13.0.0"
+    "react-pdf": "^10.2.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
