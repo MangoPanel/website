@@ -32,10 +32,13 @@ export function Main() {
                     <input type="text" name="email" placeholder="email" required />
                     <input type="password" name="password" placeholder="password" required />
                     <button disabled={pending} type="submit">Sign up</button>
-
-                    {error && <p>{error}</p>}
                 </form>
             </div>
+            {error &&
+                <div className="error-box">
+                    <p>{error}</p>
+                </div>
+            }
         </main>
     );
 }
