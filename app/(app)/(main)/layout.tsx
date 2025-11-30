@@ -1,5 +1,5 @@
-import "./main.css";
-import Link from 'next/link'
+import "./../main.css";
+import { logout } from "@/app/actions/logout";
 
 export const metadata = {
   title: "MangoPanel",
@@ -28,8 +28,7 @@ function Navbar() {
         <a className="white">MangoPanel</a>
       </div>
       <div>
-        <Link href="/login" className="white link">Login</Link>
-        <Link href="/register" className="white link">Register</Link>
+        <a className="white link" onClick={logout}>Logout</a>
       </div>
     </header>
   );
