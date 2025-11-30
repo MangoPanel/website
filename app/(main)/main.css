@@ -1,5 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Geist:wght@100;200;300;400;600;700;800;900&display=swap");
 
+:root {
+    --white-color: #faf8f1;
+    --light-color: #f5edd6;
+    --primary-color: #ffa82e;
+    --accent-color: #db4b3d;
+    --secondary-color: #55977d;
+    --dark-color: #182120;
+}
+
 * {
   font-family: 'Geist', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-display: swap;
@@ -7,18 +16,47 @@
   font-weight: 200;
 }
 
+html {
+    background-color: var(--light-color);
+    background-image: linear-gradient(var(--secondary-color) 30%, var(--light-color) 90%);
+    background-size: auto 100vh;
+    background-repeat: no-repeat;
+    height: auto;
+}
+
 body {
     margin: 0;
     padding: 0;
+    color: var(--dark-color);
+    background: repeating-conic-gradient(#55977d38 0 25%, #0000 0 50%) 50% / 80px 80px;
+    background-attachment: fixed;
+    background-repeat: round;
+    animation: bgScroll 40s linear infinite;
+    min-height: 100vh;
+    height: auto;
 }
+
+/* ANIMATIONS */
+
+@keyframes bgScroll {
+    from{background-position: 0 -100vh;}
+    to{background-position: 0 0;}
+}
+
+@keyframes loaderScroll {
+    from{background-position: 2em 0;}
+    to{background-position: 0 0;}
+}
+
+/* GENERAL */
 
 header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
-    border-bottom: solid 1px var(--white);
     margin-bottom: 2em;
+    color: var(--light-color);
 }
 header div {
     font-size: 1.4rem;
@@ -29,9 +67,10 @@ header div {
 }
 header .link {
     text-decoration: none;
+    color: var(--light-color);  
 }
 header .link:hover {
-    color: var(--purple);
+    color: var(--dark-color);
 }
 
 main {
@@ -43,28 +82,67 @@ main {
     gap: 1em;
 }
 
+div.form-container, div#upload-input, div#upload-list, div#library-container {
+    background-color: var(--white-color);
+    border: solid 2px var(--accent-color);
+    border-radius: 8px;
+    box-shadow: 6px 6px var(--accent-color);
+}
+
+button {
+    transition: 0.3s ease-in-out;
+}
+
+button:hover, input::file-selector-button {
+    cursor: pointer;
+}
+
+button:hover {
+    letter-spacing: 2px;
+}
+
 /* LOGIN & REGISTER FORMS */
 
 div.form-container {
+    margin-top: 20vh;
     padding: 1em;
-    background-color: lightgray;
 }
 
 div.form-container > form {
-    width: 500px;
+    width: 300px;
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-/* MAIN PAGE */
-
-div#upload-input {
-    background-color: lightgray;
-    width: 500px;
-    padding: 1em;
-    text-align: center;
+div.form-container > form > input {
+    border: 1px solid var(--secondary-color);
+    border-radius: 4px;
+    background: var(--white-color);
+    padding: 3px;
+    font-size: 18px;
 }
+
+div.form-container > form > button {
+    height: fit-content;
+    margin: 0.1em;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5em 1.5em;
+    width: 100%;
+    font-weight: bold;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+}
+
+div.error-box {
+    background-color: var(--white-color);
+    padding: 0.2em 2em;
+    border-radius: 8px;
+    border: 2px solid var(--dark-color);
+}
+
+/* MAIN PAGE */
 
 div#main-content {
     display: flex;
@@ -73,26 +151,60 @@ div#main-content {
 }
 
 div#main-content > div {
-    background-color: lightgray;
     padding: 1em;
+}
+
+/* UPLOAD INPUT */
+
+div#upload-input {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border-style: dashed;
+    width: 500px;
+    padding: 1em;
+    text-align: center;
+}
+
+div#upload-input > * {
+    font-weight: bold;
+}
+
+#file-input::file-selector-button {
+    display: block;
+    font-style: italic;
+    background-color: var(--accent-color);
+    color: var(--light-color);
+    padding: 0.8em 1em;
+    margin: 0.2em;
+    width: 250px;
+    border: none;
+    border-radius: 4px;
 }
 
 /* UPLOAD LIST */
 
 div#upload-list {
     width: 240px;
+    height: fit-content;
+}
+
+div#upload-list > div.upload-file:first-child {
+    margin-top: 1em;
 }
 
 div.upload-file {
-    border: 1px solid black;
+    position: relative;
+    border: 2px dotted var(--secondary-color);
+    border-radius: 6px;
     padding: 1em;
     margin-bottom: 1em;
 }
 
 div.upload-details > div.input-wrapper {
     display: flex;
-    border: 1px solid black;
-    background: white;
+    border: 1px solid var(--secondary-color);
+    border-radius: 4px;
+    background: var(--white-color);
     padding: 3px;
     margin: 10px 0;
 }
@@ -103,6 +215,7 @@ div.input-wrapper > input {
     border: none;
     padding: 0;
     width: 160px;
+    font-size: 16px;
 }
 
 div.input-wrapper > div.input-suffix {
@@ -111,20 +224,75 @@ div.input-wrapper > div.input-suffix {
 
 div.upload-details > button {
     height: fit-content;
-    margin-left: auto;
-}
-
-div.progress-bar {
-    margin-top: 0.2em;
-    background-color: black;
-    height: 0.5em;
+    margin: 0.1em;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5em 1.5em;
     width: 100%;
+    font-weight: bold;
+    font-style: italic;
+    background-color: var(--primary-color);
+    color: var(--white-color);
 }
 
-div.progress-bar.loading {
-    background-color: yellow;
+div.upload-details > button.upload-cancel {
+    position: absolute;
+    width: auto;
+    top: -1em;
+    right: -1em;
+    background-color: var(--secondary-color);
+    letter-spacing: 1px;
+    color: var(--white-color);
 }
+
+div.upload-details > button.upload-cancel:hover {
+    background-color: var(--dark-color);
+}
+
+/* LIBRARY */
 
 div#library-container {
     width: 600px;
+    height: fit-content;
+}
+
+div.library-element {
+    overflow: hidden;
+    margin: 1em 0 1em 0;
+    border: 2px solid var(--primary-color);
+    border-radius: 6px;
+}
+
+div.library-element > * {
+    padding: 0.2em 1em;
+}
+
+div.manga-options {
+    position: relative;
+    display: flex;
+    flex-direction: row; 
+    background-color: var(--primary-color);
+}
+
+div.manga-options > .loader {
+    margin: 0.5em;
+    height: 1em;
+    width: 100%;
+    border-radius: 6px;
+    background-color: var(--accent-color);
+    background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.25) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.25) 50%, rgba(0, 0, 0, 0.25) 75%, transparent 75%, transparent);
+    background-size: 2em 2em;
+    box-sizing: border-box;
+    animation: loaderScroll 1s linear infinite;
+}
+
+div.manga-options > button {
+    height: 2em;
+    width: 120px;
+    margin: 0.2em;
+    border: 1px solid var(--white-color);
+    background: none;
+    border-radius: 4px;
+    color: var(--white-color);
+    font-weight: bold;
 }

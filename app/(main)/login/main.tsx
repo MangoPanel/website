@@ -33,9 +33,13 @@ export function Main() {
                     <input type="password" name="password" placeholder="password" required />
                     <button disabled={pending} type="submit">Sign in</button>
 
-                    {error && <p>{error}</p>}
                 </form>
             </div>
+            {error &&
+                <div className="error-box">
+                    <p>{error}</p>
+                </div>
+            }
         </main>
     );
 }

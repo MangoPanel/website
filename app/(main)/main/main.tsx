@@ -37,10 +37,9 @@ export function Main({ email }: { email: string }) {
         <main>
             <div id="upload-input" className="upload-component">
                 {/* drag n drop functionality later perchance*/}
-                <label>
-                    Upload PDFs here<br />
-                    <input type="file" multiple accept="application/pdf" onChange={handleFiles}></input>
-                </label>
+                <label htmlFor="file-input">
+                    Upload your PDFs<br /></label>
+                <input type="file" multiple accept="application/pdf" id="file-input" onChange={handleFiles}></input>
             </div>
             <div id="main-content">
                 <div id="upload-list" className="upload-component">
@@ -114,7 +113,7 @@ function UploadedFile({ file, email, onRemove }: UploadedFileProps) {
                     <input type="text" defaultValue={file.name.slice(0, -4)} onChange={changeName} disabled={disable} placeholder="title"></input>
                     <div className="input-suffix">.pdf</div>
                 </div>
-                <button disabled={disable} onClick={cancel}>CANCEL</button>
+                <button className="upload-cancel" disabled={disable} onClick={cancel}>CANCEL</button>
                 <button disabled={disable} onClick={uploadOriginal}>SEND ORIGINAL</button>
                 <button disabled={disable} onClick={uploadTranslate}>TRANSLATE</button>
             </div>
@@ -159,6 +158,9 @@ function MangaCard({ PDF }: { PDF: PDF }) {
             <div className="library-element">
                 <p>{PDF.name}</p>
                 {/* add loading animation */}
+                <div className="manga-options">
+                    <div className="loader"></div>
+                </div>
             </div>
         );
     }
@@ -166,10 +168,10 @@ function MangaCard({ PDF }: { PDF: PDF }) {
         <div className="library-element">
             <p>{PDF.name}</p>
             <div className="manga-options">
+                <button className="read-button" onClick={redirect}>READ</button>
+                <button>RENAME</button> {/* Julia pozostawiam to tobie */}
                 <button onClick={download}>DOWNLOAD</button>
                 <button onClick={redo}>REDO</button>
-                <button onClick={redirect}>READ</button>
-                <button>RENAME</button> {/* Julia pozostawiam to tobie */}
                 <button onClick={deletePDF}>DELETE</button>
             </div>
         </div>
