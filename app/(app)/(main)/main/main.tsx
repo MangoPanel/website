@@ -37,8 +37,9 @@ export function Main({ email }: { email: string }) {
         <main>
             <div id="upload-input" className="upload-component">
                 {/* drag n drop functionality later perchance*/}
-                <label htmlFor="file-input">
-                    Upload your PDFs<br /></label>
+                <p>Upload your PDFs</p>
+                <label id="file-button" htmlFor="file-input">
+                    Browse...</label>
                 <input type="file" multiple accept="application/pdf" id="file-input" onChange={handleFiles}></input>
             </div>
             <div id="main-content">

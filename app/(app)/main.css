@@ -18,7 +18,7 @@
 
 html {
     background-color: var(--light-color);
-    background-image: linear-gradient(var(--secondary-color) 30%, var(--light-color) 90%);
+    background-image: linear-gradient(var(--secondary-color) 15%, var(--light-color) 90%);
     background-size: auto 100vh;
     background-repeat: no-repeat;
     height: auto;
@@ -71,6 +71,7 @@ header .link {
 }
 header .link:hover {
     color: var(--dark-color);
+    transition: 0.3s ease-in-out;
 }
 
 main {
@@ -106,10 +107,12 @@ button:hover {
 div.form-container {
     margin-top: 20vh;
     padding: 1em;
+    max-width: 80vw;
 }
 
 div.form-container > form {
     width: 300px;
+    max-width: 80vw;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -161,6 +164,7 @@ div#upload-input {
     color: var(--white-color);
     border-style: dashed;
     width: 500px;
+    max-width: 80vw;
     padding: 1em;
     text-align: center;
 }
@@ -169,14 +173,23 @@ div#upload-input > * {
     font-weight: bold;
 }
 
-#file-input::file-selector-button {
+div#upload-input > p {
+    margin: 0.8em;
+}
+
+#file-input {
+    display: none;
+}
+
+#file-button {
     display: block;
+    margin: 0 auto;
+    text-align: center;
     font-style: italic;
     background-color: var(--accent-color);
     color: var(--light-color);
     padding: 0.8em 1em;
-    margin: 0.2em;
-    width: 250px;
+    width: 220px;
     border: none;
     border-radius: 4px;
 }
@@ -214,12 +227,13 @@ div.input-wrapper > input {
     background: transparent;
     border: none;
     padding: 0;
-    width: 160px;
+    width: 100%;
     font-size: 16px;
 }
 
 div.input-wrapper > div.input-suffix {
     position: relative;
+    margin-left: auto;
 }
 
 div.upload-details > button {
@@ -288,11 +302,85 @@ div.manga-options > .loader {
 
 div.manga-options > button {
     height: 2em;
-    width: 120px;
+    width: 100%;
     margin: 0.2em;
     border: 1px solid var(--white-color);
     background: none;
     border-radius: 4px;
     color: var(--white-color);
     font-weight: bold;
+}
+
+@media (max-width: 940) {
+    div#main-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    div#upload-list {
+        width: 400px;
+    }
+}
+
+@media (max-width: 799) {
+    * {
+        font-size: 20px;
+    }
+
+    /* LOGIN & REGISTER FORMS */
+
+    div.form-container > form > input {
+        font-size: 20px;
+        line-height: 1.2em;
+    }
+
+    div.form-container > form > button {
+        font-size: 18px;
+    }
+
+    /* MAIN PAGE */
+
+    div.input-wrapper > input {
+        font-size: 18px;
+    }
+
+    div.input-wrapper > div.input-suffix {
+        font-size: 18px;
+    }
+
+    div.upload-details > button {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 690px) {
+    * {
+        font-size: 22px;
+    }
+
+    div#library-container {
+        width: 420px;
+    }
+
+    div.manga-options {
+        flex-direction: column; 
+    }
+}
+
+@media (max-width: 480px) {
+
+    header div {
+        padding: 0.2em;
+        gap: 0.2em;
+    }
+
+    /* MAIN PAGE */
+
+    div#upload-list {
+        width: 240px;
+    }
+
+    div#library-container {
+        width: 240px;
+    }
 }
