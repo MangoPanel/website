@@ -43,13 +43,14 @@ export function Main({ email }: { email: string }) {
                 <input type="file" multiple accept="application/pdf" id="file-input" onChange={handleFiles}></input>
             </div>
             <div id="main-content">
-                <div id="upload-list" className="upload-component">
+                {uploadedFiles.length > 0 && <div id="upload-list" className="upload-component">
                     {uploadedFiles.map((file: File) => (
                         <UploadedFile file={file} email={email} key={file.name} onRemove={() => removeUploadedFile(file)}/> 
                     ))}
-                </div>
+                </div>}
 
                 <div id="library-container">
+                    {( PDF === undefined || PDF.length === 0) && <p>Your library is empty.</p> }
                     {PDF.map(pdf => (
                     <MangaCard key={pdf.id} PDF={pdf} />
                     ))}
@@ -123,9 +124,19 @@ function UploadedFile({ file, email, onRemove }: UploadedFileProps) {
 }
 
 function MangaCard({ PDF }: { PDF: PDF }) {
+    const [editing, setEditing] = useState<String>("");
+    const [newTitle, setNewTitle] = useState<String>("");
+
+    const changeTitle = function(e: ChangeEvent<HTMLInputElement>) {
+        const newTitle = e.target.value ? `${e.target.value}` : PDF.name;
+        setNewTitle(newTitle);
+    }
+
     const router = useRouter();
     const redirect = function() {
         router.push(`/reader/${PDF.email}/${PDF.id}`)
+    }
+    const rename = function() {
     }
     const deletePDF = function() {
         const form = new FormData();
@@ -158,7 +169,6 @@ function MangaCard({ PDF }: { PDF: PDF }) {
         return (
             <div className="library-element">
                 <p>{PDF.name}</p>
-                {/* add loading animation */}
                 <div className="manga-options">
                     <div className="loader"></div>
                 </div>
@@ -167,14 +177,28 @@ function MangaCard({ PDF }: { PDF: PDF }) {
     }
     return (
         <div className="library-element">
-            <p>{PDF.name}</p>
-            <div className="manga-options">
+            {editing === "" && <p>{PDF.name}</p>}
+            {editing === "" && <div className="manga-options">
                 <button className="read-button" onClick={redirect}>READ</button>
-                <button>RENAME</button> {/* Julia pozostawiam to tobie */}
+                <button onClick={() => setEditing("rename")}>RENAME</button>
                 <button onClick={download}>DOWNLOAD</button>
                 <button onClick={redo}>REDO</button>
-                <button onClick={deletePDF}>DELETE</button>
-            </div>
+                <button onClick={() => setEditing("delete")}>DELETE</button>
+            </div>}
+            {editing === "delete" && <div className="manga-options editing">
+                <p>Are you sure you want to delete <span>"{PDF.name}"</span>?</p>
+                <div className="editing-buttons">
+                    <button onClick={() => setEditing("")}>No, go back.</button>
+                    <button className="edit-confirm-button" onClick={deletePDF}>Yes, delete it.</button>
+                </div>
+            </div>}
+            {editing === "rename" && <div className="manga-options editing">
+                <input type="text" defaultValue={PDF.name} onChange={changeTitle} placeholder="new title"></input>
+                <div className="editing-buttons">
+                    <button onClick={() => setEditing("")}>Cancel.</button>
+                    <button className="edit-confirm-button" onClick={rename}>Rename.</button>
+                </div>
+            </div>}
         </div>
     );
 }
