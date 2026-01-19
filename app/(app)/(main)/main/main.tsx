@@ -1,12 +1,12 @@
 "use client"
-import { PDF } from "@/app/lib/pdf";
+import { PDFtype } from "@/app/lib/pdf";
 import { urlR2wrapper, pdfGetAllWrapper } from "@/app/actions/wrapper";
 import { useRouter } from 'next/navigation';
 import { useEffect, ChangeEvent, useState } from "react";
 
 export function Main({ email }: { email: string }) {
-    const [PDF, setPDF] = useState<PDF[]>([]);
-    const [unprocessedPDF, setUnprocessedPDF] = useState<PDF[]>([]);
+    const [PDF, setPDF] = useState<PDFtype[]>([]);
+    const [unprocessedPDF, setUnprocessedPDF] = useState<PDFtype[]>([]);
     const [uploadedFiles, setFiles] = useState<File[]>([]);
     
     const handleFiles = function(e: ChangeEvent<HTMLInputElement>) {
@@ -22,11 +22,13 @@ export function Main({ email }: { email: string }) {
 
     useEffect(() => {
         const fetchPDFs = async () => {
-            const pdfArr : PDF[] = await pdfGetAllWrapper(email) || [];
-            const processed   = pdfArr.filter(pdf => pdf.processed === true);
-            const unprocessed = pdfArr.filter(pdf => pdf.processed === false);
-            setPDF(processed);
-            setUnprocessedPDF(unprocessed);
+            const pdfArr : PDFtype[] = await pdfGetAllWrapper(email) || [];
+            if (pdfArr.length !== 0) {
+                const processed   = pdfArr.filter(pdf => pdf.processed === true);
+                const unprocessed = pdfArr.filter(pdf => pdf.processed === false);
+                setPDF(processed);
+                setUnprocessedPDF(unprocessed);
+            }
         };
         fetchPDFs();
         const interval = setInterval(fetchPDFs, 30000);
@@ -123,9 +125,9 @@ function UploadedFile({ file, email, onRemove }: UploadedFileProps) {
     );
 }
 
-function MangaCard({ PDF }: { PDF: PDF }) {
-    const [editing, setEditing] = useState<String>("");
-    const [newTitle, setNewTitle] = useState<String>("");
+function MangaCard({ PDF }: { PDF: PDFtype }) {
+    const [editing, setEditing] = useState<string>("");
+    const [newTitle, setNewTitle] = useState<string>("");
 
     const changeTitle = function(e: ChangeEvent<HTMLInputElement>) {
         const newTitle = e.target.value ? `${e.target.value}` : PDF.name;
@@ -186,7 +188,7 @@ function MangaCard({ PDF }: { PDF: PDF }) {
                 <button onClick={() => setEditing("delete")}>DELETE</button>
             </div>}
             {editing === "delete" && <div className="manga-options editing">
-                <p>Are you sure you want to delete <span>"{PDF.name}"</span>?</p>
+                <p>Are you sure you want to delete <span>{PDF.name}</span>?</p>
                 <div className="editing-buttons">
                     <button onClick={() => setEditing("")}>No, go back.</button>
                     <button className="edit-confirm-button" onClick={deletePDF}>Yes, delete it.</button>
