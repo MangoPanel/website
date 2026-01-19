@@ -1,6 +1,6 @@
 import { pg } from '@/app/lib/data';
 
-export type PDF = {
+export type PDFtype = {
     id: number;
     name: string;
     email: string;
@@ -26,13 +26,13 @@ export async function pdfUpdate(name : string, r2_key : string, email : string, 
     );
 }
 
-export async function pdfGet(name : string, email : string): Promise<PDF> {
+export async function pdfGet(name : string, email : string): Promise<PDFtype> {
     const result = await pg.query(
         'SELECT * FROM pdf WHERE name=$1 AND email=$2',
         [name, email]
     );
     const data = result.rows[0];
-    const pdf:PDF = {
+    const pdf:PDFtype = {
         id: data.id,
         name: data.name,
         email: data.email,
@@ -45,12 +45,12 @@ export async function pdfGet(name : string, email : string): Promise<PDF> {
     return pdf;
 }
 
-export async function pdfGetAll(email : string): Promise<PDF[]> {
+export async function pdfGetAll(email : string): Promise<PDFtype[]> {
     const result = await pg.query(
         'SELECT * FROM pdf WHERE email=$1',
         [email]
     );
-    const pdfs: PDF[] = result.rows.map((row : PDF): PDF => {
+    const pdfs: PDFtype[] = result.rows.map((row : PDFtype): PDFtype => {
         return {
             id: row.id,
             name: row.name,
