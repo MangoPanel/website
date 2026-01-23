@@ -72,6 +72,7 @@ header .link {
 header .link:hover {
     color: var(--dark-color);
     transition: 0.3s ease-in-out;
+    cursor: pointer;
 }
 
 main {
@@ -94,7 +95,7 @@ button {
     transition: 0.3s ease-in-out;
 }
 
-button:hover, input::file-selector-button {
+button:hover, #file-button:hover {
     cursor: pointer;
 }
 
