@@ -26,6 +26,13 @@ export async function pdfUpdate(name : string, r2_key : string, email : string, 
     );
 }
 
+export async function pdfRename(name: string, id: number) {
+    await pg.query(
+        'UPDATE pdf SET name=$1 WHERE id=$2',
+        [name, id]
+    );
+}
+
 export async function pdfGet(name : string, email : string): Promise<PDFtype> {
     const result = await pg.query(
         'SELECT * FROM pdf WHERE name=$1 AND email=$2',
