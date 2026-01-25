@@ -27,17 +27,11 @@ export async function POST(request: NextRequest) {
     if (!isNaN(id))
         return NextResponse.json({ error: "Failed to retrieve pdf id" }, { status: 400 });
 
-    try {
-      const url : string = await urlR2(r2_key, 60);
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`Failed to fetch file: ${res.status}`);
-      const buffer = await res.arrayBuffer();
-      file = new File([buffer], name, { type: "application/pdf" });
-    } catch {
-      return NextResponse.json({ error: "Failed to retrieve PDF file" }, { status: 400 });
-    }
+    const url : string = await urlR2(r2_key, 60);
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Failed to fetch file: ${res.status}`);
 
-    const arrayBuffer = await translate(file);
+    const arrayBuffer = await res.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer); 
     const pageLen = pdfLength(arrayBuffer);
     
