@@ -1,10 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Geist:wght@100;200;300;400;600;700;800;900&display=swap");
 
 :root {
-  --black:#0B0C0E;
-  --white: #f8f8f8;
-  --purple: #7F00FF;
+    --white-color: #faf8f1;
+    --light-color: #f5edd6;
+    --primary-color: #ffa82e;
+    --accent-color: #db4b3d;
+    --secondary-color: #55977d;
+    --dark-color: #182120;
 }
+
 * {
   font-family: 'Geist', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-display: swap;
@@ -12,21 +16,47 @@
   font-weight: 200;
 }
 
+html {
+    background-color: var(--light-color);
+    background-image: linear-gradient(var(--secondary-color) 15%, var(--light-color) 90%);
+    background-size: auto 100vh;
+    background-repeat: no-repeat;
+    height: auto;
+}
+
 body {
     margin: 0;
     padding: 0;
-    background-image: url("/landing-body.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-     background-attachment: fixed;
+    color: var(--dark-color);
+    background: repeating-conic-gradient(#55977d38 0 25%, #0000 0 50%) 50% / 80px 80px;
+    background-attachment: fixed;
+    background-repeat: round;
+    animation: bgScroll 40s linear infinite;
+    min-height: 100vh;
+    height: auto;
 }
+
+/* ANIMATIONS */
+
+@keyframes bgScroll {
+    from{background-position: 0 -100vh;}
+    to{background-position: 0 0;}
+}
+
+@keyframes loaderScroll {
+    from{background-position: 2em 0;}
+    to{background-position: 0 0;}
+}
+
+/* GENERAL */
 
 header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
-    border-bottom: solid 1px var(--white);
+    margin-bottom: 4em;
+    color: var(--light-color);
 }
 header div {
     font-size: 1.4rem;
@@ -37,55 +67,150 @@ header div {
 }
 header .link {
     text-decoration: none;
+    color: var(--light-color);  
 }
 header .link:hover {
-    color: var(--purple);
+    color: var(--dark-color);
+    transition: 0.3s ease-in-out;
+    cursor: pointer;
 }
 
 main {
-    margin: 0 auto;
-    width: min(1400px, 80%);
-}
-h1 {
-    font-size: 2.8rem;
-}
-p {
-    font-size: 1.4rem;
-}
-.white {
-    color: var(--white);
-}
-.purple {
-    color: var(--purple);
-}
-
-.hero {
-    margin: 5vh 0;
+    width: 100vw;
+    max-width: 100%;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
-    gap: 5vh;
-}
-.hero .upper {
-    background-color: var(--black);
-    padding: 0px 30px;
-}
-.hero .lower {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
     align-items: center;
+    justify-content: center;
+    gap: 1em;
 }
-.hero .button {
-    font-size: 1.8rem;
-    font-weight: 900;
-    background: var(--black);
-    padding: 5px 20px;
+
+/* LANDING PAGE */
+
+div#landing-content {
+    width: 100vw;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, var(--light-color) 0%, var(--white-color) 100%);
+    padding: 2em;
+    gap: 2em;
+}
+
+div#text-content {
+    border-radius: 6px;
+    padding: 1em;
+    border: solid 1px var(--secondary-color);
+    background-color: var(--white-color);
+}
+
+div#text-content > h1 {
+    font-style: italic;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+div#text-content > p {
+    width: 400px;
+}
+
+div#text-content > p > span {
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+div#text-content > a {
+    color: var(--white-color);
     text-decoration: none;
+    margin-top: 2em;
 }
-.hero .button:hover {
-    color: var(--purple);
+
+div#start-button {
+    background: var(--accent-color);
+    color: var(--white-color);
+    padding: 1em;
+    border-radius: 3px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    transition: 0.3s ease-in-out;
 }
-.img {
-    width: 300px;
-    height: auto;
+
+div#start-button:hover {
+    background: var(--dark-color);
+    padding-left: 35%;
+}
+
+div#start-button > span {
+    color: var(--accent-color);
+    font-weight: bold;
+    font-style: italic;
+    letter-spacing: 2px;
+}
+
+div#manga-preview {
+    position: relative;
+    border: solid 2px var(--dark-color);
+    box-shadow: 6px 6px var(--accent-color);
+}
+
+div#manga-preview > p {
+    position:absolute;
+    right: 12px;
+    bottom: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+div#img-gradient {
+    display: inline-block;
+    position: relative;
+}
+
+div#img-gradient:after {
+    content:'';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 50%, var(--white-color) 100%);
+}
+
+@media (max-width: 950) {
+    div#landing-content {
+        flex-direction: column;
+        background: none;
+    }
+
+    div#text-content {
+        border: solid 2px var(--accent-color);
+        box-shadow: 6px 6px var(--accent-color);
+    }
+}
+
+@media (max-width: 799) {
+    * {
+        font-size: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 690px) {
+    * {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    header div {
+        padding: 0.2em;
+        gap: 0.2em;
+    }
 }
