@@ -31,7 +31,7 @@ export function Main({ email }: { email: string }) {
             }
         };
         fetchPDFs();
-        const interval = setInterval(fetchPDFs, 30000);
+        const interval = setInterval(fetchPDFs, 3000);
         return () => clearInterval(interval);
     }, [email]);
 
@@ -102,7 +102,7 @@ function UploadedFile({ file, email, onRemove }: UploadedFileProps) {
     };
     const uploadTranslate = function() {
         setDisable(true);
-        {/* TODO */}
+        uploadFile(true);
         onRemove();
     };
     const cancel = function() {
@@ -175,7 +175,15 @@ function MangaCard({ PDF }: { PDF: PDFtype }) {
             // show error notification
     }
     const redo = function() {
-        // TODO
+        const form = new FormData();
+        form.append("r2_key", PDF.r2_key);
+        form.append("id", String(PDF.id));
+        form.append("name", PDF.name);
+        form.append("email", PDF.email);
+        fetch('/api/pdf/redo', {
+            method: 'POST',
+            body: form,
+        });
     }
     if (!PDF.processed) {
         return (
@@ -194,7 +202,7 @@ function MangaCard({ PDF }: { PDF: PDFtype }) {
                 <button className="read-button" onClick={redirect}>READ</button>
                 <button onClick={() => setEditing("rename")}>RENAME</button>
                 <button onClick={download}>DOWNLOAD</button>
-                <button onClick={redo}>REDO</button>
+                {PDF.translated && <button onClick={redo}>REDO</button>}
                 <button onClick={() => setEditing("delete")}>DELETE</button>
             </div>}
             {editing === "delete" && <div className="manga-options editing">

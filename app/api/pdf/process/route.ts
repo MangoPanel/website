@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PDFDocument } from 'pdf-lib';
 import { pdfInsert, pdfUpdate } from '@/app/lib/pdf';
 import { writeR2 } from '@/app/lib/r2';
+import { translate } from '@/app/lib/core';
 
 export const runtime = 'nodejs';
 
@@ -11,7 +12,6 @@ async function pdfLength(buffer: ArrayBuffer) {
   return pdfDoc.getPageCount();
 }
 
-// placeholder until core is ready
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -28,8 +28,13 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Failed to retrieve file name or user email" }, { status: 400 });
 
     const id : number = await pdfInsert(name, email, translated);
+    let arrayBuffer : ArrayBuffer;
 
-    const arrayBuffer = await file.arrayBuffer();
+    if (translated) {
+      arrayBuffer = await translate(file); 
+    } else
+      arrayBuffer = await file.arrayBuffer();
+
     const buffer = Buffer.from(arrayBuffer); 
     const pageLen = pdfLength(arrayBuffer);
     
