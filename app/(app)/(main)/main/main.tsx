@@ -130,8 +130,8 @@ function MangaCard({ PDF }: { PDF: PDFtype }) {
     const [newTitle, setNewTitle] = useState<string>("");
 
     const changeTitle = function(e: ChangeEvent<HTMLInputElement>) {
-        const newTitle = e.target.value ? `${e.target.value}` : PDF.name;
-        setNewTitle(newTitle);
+        const titleInput = e.target.value ? `${e.target.value}` : PDF.name;
+        setNewTitle(titleInput + ".pdf");
     }
 
     const router = useRouter();
@@ -139,6 +139,16 @@ function MangaCard({ PDF }: { PDF: PDFtype }) {
         router.push(`/reader/${PDF.email}/${PDF.id}`)
     }
     const rename = function() {
+        const form = new FormData();
+        form.append("email", PDF.email);
+        form.append("r2_key", PDF.r2_key);
+        form.append("id", String(PDF.id));
+        form.append("name", newTitle);
+        fetch('api/pdf/rename', {
+            method: 'POST',
+            body: form
+        });
+        setEditing("");
     }
     const deletePDF = function() {
         const form = new FormData();
@@ -195,7 +205,7 @@ function MangaCard({ PDF }: { PDF: PDFtype }) {
                 </div>
             </div>}
             {editing === "rename" && <div className="manga-options editing">
-                <input type="text" defaultValue={PDF.name} onChange={changeTitle} placeholder="new title"></input>
+                <input type="text" defaultValue={PDF.name.slice(0, -4)} onChange={changeTitle} placeholder="new title"></input>
                 <div className="editing-buttons">
                     <button onClick={() => setEditing("")}>Cancel.</button>
                     <button className="edit-confirm-button" onClick={rename}>Rename.</button>
