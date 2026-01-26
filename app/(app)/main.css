@@ -30,10 +30,9 @@ body {
     color: var(--dark-color);
     background: repeating-conic-gradient(#55977d38 0 25%, #0000 0 50%) 50% / 80px 80px;
     background-attachment: fixed;
-    background-repeat: round;
+    background-repeat: repeat;
     animation: bgScroll 40s linear infinite;
-    min-height: 100vh;
-    height: auto;
+    height: 100%;
 }
 
 /* ANIMATIONS */
@@ -82,6 +81,7 @@ main {
     align-items: center;
     justify-content: center;
     gap: 1em;
+    padding-bottom: 50px;
 }
 
 div.form-container, div#upload-input, div#upload-list, div#library-container {
