@@ -30,9 +30,10 @@ body {
     color: var(--dark-color);
     background: repeating-conic-gradient(#55977d38 0 25%, #0000 0 50%) 50% / 80px 80px;
     background-attachment: fixed;
-    background-repeat: repeat;
+    background-repeat: round;
     animation: bgScroll 40s linear infinite;
-    height: 100%;
+    min-height: 100vh;
+    height: auto;
 }
 
 /* ANIMATIONS */
@@ -109,6 +110,16 @@ div.form-container {
     margin-top: 20vh;
     padding: 1em;
     max-width: 80vw;
+}
+
+div.form-container > h1 {
+    font-size: 20px;
+    font-style: italic;
+    font-weight: bold;
+    margin: 0;
+    text-align: right;
+    color: var(--accent-color);
+    text-transform: capitalize;
 }
 
 div.form-container > form {

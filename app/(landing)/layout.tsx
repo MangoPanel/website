@@ -1,4 +1,5 @@
 import "./landing.css";
+import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata = {
@@ -25,7 +26,12 @@ function Navbar() {
   return (
     <header>
       <div>
-        <a className="white">MangoPanel</a>
+        <Image className="img" 
+          src="/logo.png"
+          width={107}
+          height={40}
+          alt="logo"
+        />
       </div>
       <div>
         <Link href="/login" className="white link">Login</Link>

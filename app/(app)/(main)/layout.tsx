@@ -1,4 +1,5 @@
 import "./../main.css";
+import Image from 'next/image';
 import { logout } from "@/app/actions/logout";
 
 export const metadata = {
@@ -25,7 +26,12 @@ function Navbar() {
   return (
     <header>
       <div>
-        <a className="white">MangoPanel</a>
+        <Image className="img" 
+          src="/logo.png"
+          width={107}
+          height={40}
+          alt="logo"
+        />
       </div>
       <div>
         <a className="white link" onClick={logout}>Logout</a>

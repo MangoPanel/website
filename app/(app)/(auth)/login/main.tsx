@@ -28,6 +28,7 @@ export function Main() {
     return (
         <main>
             <div className="form-container">
+                <h1>LOGIN</h1>
                 <form onSubmit={Login}>
                     <input type="text" name="email" placeholder="email" required />
                     <input type="password" name="password" placeholder="password" required />
