@@ -54,8 +54,8 @@ header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
-    margin-bottom: 4em;
     color: var(--light-color);
 }
 header div {
