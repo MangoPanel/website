@@ -36,11 +36,11 @@ export async function POST(request: NextRequest) {
       arrayBuffer = await file.arrayBuffer();
 
     const buffer = Buffer.from(arrayBuffer); 
-    const pageLen = pdfLength(arrayBuffer);
+    const pageLen = await pdfLength(arrayBuffer);
     
     const key = await writeR2(buffer, String(id), email, "application/pdf");
 
-    await pdfUpdate(name, key, email, await pageLen, false, true, translated);
+    await pdfUpdate(id, key, email, pageLen, false, true, translated);
 
     return NextResponse.json({ status: 200 });
   } catch {

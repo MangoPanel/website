@@ -19,10 +19,10 @@ export async function pdfInsert(name: string, email: string, translated: boolean
     return result.rows[0].id;
 }
 
-export async function pdfUpdate(name : string, r2_key : string, email : string, pageCount : number, favourite : boolean, processed : boolean, translated : boolean) {
+export async function pdfUpdate(id : number, r2_key : string, email : string, pageCount : number, favourite : boolean, processed : boolean, translated : boolean) {
     await pg.query(
-        'UPDATE pdf SET r2_key=$2, email=$3, page_count=$4, favourite=$5, processed=$6, translated=$7 WHERE name=$1',
-        [name, r2_key, email, pageCount, favourite, processed, translated]
+        'UPDATE pdf SET r2_key=$2, email=$3, page_count=$4, favourite=$5, processed=$6, translated=$7 WHERE id=$1',
+        [id, r2_key, email, pageCount, favourite, processed, translated]
     );
 }
 
