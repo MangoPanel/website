@@ -7,7 +7,7 @@ export default function Home() {
                 <div id="text-content">
                     <h1>original PDF in, translated PDF out.</h1>
                     <p>MangoPanel will effortlessly translate the manga <span>with full context of the previous pages using a machine language model around translating the way a writer would translate.</span> Translated pdfs can be downloaded, saved and read using our PDF reader.</p>
-                    <p>This is a student project, do not take it seriously.</p>
+                    <p>This is a student project, keep your expectations at bay.</p>
                     <Link href="/register">
                         <div id="start-button">
                             GET STARTED<span>!!</span>
