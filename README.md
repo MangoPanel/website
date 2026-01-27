@@ -1,13 +1,12 @@
+![logo](logo.png)
+
 > [!NOTE]
-> This is an unfinished student project. As of current we don't accept new contributors.
+> This is a student project, as of current it is not hosted
 
-## developing
-
-### requirements
+## requirements
 
 - node.js
-- any manga of choice named test.pdf in /public
-- poppler (ensure bin is in path)
+- mangopanel/core (for the translate and redo features)
 
 ### installing and running
 
@@ -17,9 +16,7 @@ how to start working on the project:
 
 2. install dependencies with: `npm install`
 
-3. start server with: `npm run dev`
-
-4. open [http://localhost:3000](http://localhost:3000)
+3. Create an .env.local file containing DATABASE_URL, PGSSLMODE, NODE_ENV, R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME and R2_PUBLIC_URL
 
 ### contributing
 
