@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PDFDocument } from 'pdf-lib';
 import { pdfUpdate } from '@/app/lib/pdf';
 import { writeR2, urlR2 } from '@/app/lib/r2';
-import { translate } from '@/app/lib/core';
 
 export const runtime = 'nodejs';
 
@@ -16,7 +15,6 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
 
-    let file;
     const r2_key  = formData.get("r2_key");
     const id_str  = formData.get("id");
     const name    = formData.get("name ");
