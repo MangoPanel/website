@@ -1,14 +1,15 @@
-export async function translate(file: File): Promise<ArrayBuffer> {
-  const form = new FormData();
-  form.append("file", file, file.name);
-
-  const res = await fetch(
-    "http://localhost:5001/api/process-pdf?steps=ocr,translate",
-    {
-      method: "POST",
-      body: form,
-    }
+export async function translate(file: ArrayBuffer, name : string): Promise<ArrayBuffer> {
+  const outForm = new FormData();
+  outForm.append(
+    "file",
+    new Blob([file], { type: "application/pdf" }),
+    name
   );
+
+  const res = await fetch("http://localhost:5001/api/process-pdf?steps=ocr,translate", {
+    method: "POST",
+    body: outForm,
+  });
 
   if (!res.ok) {
     const ct = res.headers.get("content-type") ?? "";

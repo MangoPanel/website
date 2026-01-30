@@ -28,8 +28,8 @@ function Navbar() {
       <div>
         <Image className="img" 
           src="/logo.png"
-          width={107}
-          height={40}
+          width={84}
+          height={31}
           alt="logo"
         />
       </div>
