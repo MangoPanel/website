@@ -4,6 +4,14 @@ import { pdfUpdate } from '@/app/lib/pdf';
 import { writeR2, urlR2 } from '@/app/lib/r2';
 import { translate } from '@/app/lib/core';
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '50mb',
+    },
+    responseLimit: false,
+  },
+};
 export const runtime = 'nodejs';
 
 async function pdfLength(buffer: ArrayBuffer) {
@@ -16,7 +24,6 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
 
-    let file;
     const r2_key  = formData.get("r2_key");
     const id_str  = formData.get("id");
     const name    = formData.get("name ");
@@ -31,12 +38,11 @@ export async function POST(request: NextRequest) {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`Failed to fetch file: ${res.status}`);
 
-    const arrayBuffer = await res.arrayBuffer();
+    let arrayBuffer = await res.arrayBuffer();
+    arrayBuffer = await translate(arrayBuffer, name);
     const buffer = Buffer.from(arrayBuffer); 
     const pageLen = await pdfLength(arrayBuffer);
-    
     const key = await writeR2(buffer, String(id), email, "application/pdf");
-
     await pdfUpdate(id, key, email, pageLen, false, true, true);
 
     return NextResponse.json({ status: 200 });

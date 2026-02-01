@@ -1,4 +1,4 @@
-![logo](logo.png)
+![logo](public/logo.png)
 
 > [!NOTE]
 > This is a student project, as of current it is not hosted

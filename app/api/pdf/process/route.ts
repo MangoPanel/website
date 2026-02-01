@@ -4,6 +4,14 @@ import { pdfInsert, pdfUpdate } from '@/app/lib/pdf';
 import { writeR2 } from '@/app/lib/r2';
 import { translate } from '@/app/lib/core';
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '50mb',
+    },
+    responseLimit: false,
+  },
+};
 export const runtime = 'nodejs';
 
 async function pdfLength(buffer: ArrayBuffer) {
@@ -17,23 +25,22 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
 
     const file = formData.get("file");
+    if (!(file instanceof File)) {
+      throw new Error(`Translator error no FILE`);
+    }
     const name  = formData.get("name");
     const email = formData.get("email");
     const translated : boolean = formData.get("translate") === "true";
     if (!file || !(file instanceof File))
       return NextResponse.json({ error: "File is required" }, { status: 400 });
-    if (file.type !== "application/pdf")
-      return NextResponse.json({ error: "File must be a PDF" }, { status: 400 });
     if (typeof name !== "string" || typeof email !== "string")
         return NextResponse.json({ error: "Failed to retrieve file name or user email" }, { status: 400 });
 
     const id : number = await pdfInsert(name, email, translated);
-    let arrayBuffer : ArrayBuffer;
+    let arrayBuffer : ArrayBuffer = await file.arrayBuffer();
 
-    if (translated) {
-      arrayBuffer = await translate(file); 
-    } else
-      arrayBuffer = await file.arrayBuffer();
+    if (translated)
+      arrayBuffer = await translate(arrayBuffer, name);
 
     const buffer = Buffer.from(arrayBuffer); 
     const pageLen = await pdfLength(arrayBuffer);
